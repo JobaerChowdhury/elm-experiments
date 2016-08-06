@@ -4,12 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Basketball Score Keeper</title>
+  <title>Elm Experiments</title>
   <link rel="stylesheet" href="app.css">
 </head>
 
 <body>
-  <h1>Some experiments</h1>
+  <h1>Some experiments in Elm</h1>
+  <div id="hello"></div>
+  <script src="bundle.js"></script>
+  <script>
+    var node = document.getElementById('hello');
+    var app = Elm.Main.embed(node);
+  </script>
 </body>
 
 </html>
