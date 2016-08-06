@@ -1,6 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, text, button)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Html.App as App
 import Time exposing (Time, second)
 import Task exposing (perform)
@@ -21,7 +23,13 @@ main =
 
 
 type alias Model =
-    Time
+    State
+
+
+type State
+    = Running Time
+    | Resumed
+    | Paused
 
 
 getTime : Cmd Msg
@@ -31,7 +39,7 @@ getTime =
 
 init : ( Model, Cmd Msg )
 init =
-    ( 0, getTime )
+    ( Running 0, getTime )
 
 
 
@@ -40,6 +48,8 @@ init =
 
 type Msg
     = NoOp
+    | Pause
+    | Resume
     | Tick Time
 
 
@@ -47,22 +57,30 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick newTime ->
-            ( newTime, Cmd.none )
+            ( Running newTime, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
 
+        Pause ->
+            ( Paused, Cmd.none )
+
+        Resume ->
+            ( Resumed, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
---subscriptions : Model -> Sub Msg
---subscriptions model =
---Time.every second Tick
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    case model of
+        Paused ->
+            Sub.none
+
+        _ ->
+            Time.every second Tick
 
 
 
@@ -74,4 +92,15 @@ view model =
     div []
         [ text "Current time is: "
         , text (toString model)
+        , showButton model
         ]
+
+
+showButton : Model -> Html Msg
+showButton model =
+    case model of
+        Paused ->
+            button [ type' "button", onClick Resume ] [ text "Resume" ]
+
+        _ ->
+            button [ type' "button", onClick Pause ] [ text "Pause" ]
