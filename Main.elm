@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Html exposing (Html, div, text, button)
 import Html.Attributes exposing (..)
@@ -73,8 +73,31 @@ update msg model =
 -- SUBSCRIPTIONS
 
 
+port command : (String -> msg) -> Sub msg
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
+    Sub.batch [ clockTick model, commandConv ]
+
+
+convert : String -> Msg
+convert s =
+    if s == "pause" then
+        Pause
+    else if s == "resume" then
+        Resume
+    else
+        NoOp
+
+
+commandConv : Sub Msg
+commandConv =
+    command convert
+
+
+clockTick : Model -> Sub Msg
+clockTick model =
     case model of
         Paused ->
             Sub.none

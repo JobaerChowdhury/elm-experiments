@@ -15,7 +15,15 @@
   <script>
     var node = document.getElementById('hello');
     var app = Elm.Main.embed(node);
+
+    function sendCommand(cmd) {
+      console.log("Requesting for " + cmd);
+      app.ports.command.send(cmd);
+    }
   </script>
+  <h4>Now some pure js components</h4>
+  <button onclick="sendCommand('pause')">Pause</button>
+  <button onclick="sendCommand('resume')">Resume</button>
 </body>
 
-</html> 
+</html>
