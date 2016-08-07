@@ -20,10 +20,17 @@
       console.log("Requesting for " + cmd);
       app.ports.command.send(cmd);
     }
+
+    app.ports.status.subscribe(function(msg) {
+      console.log("Got this message from elm: " + msg);
+      document.getElementById('status').innerHTML = msg;
+    });
   </script>
   <h4>Now some pure js components</h4>
   <button onclick="sendCommand('pause')">Pause</button>
   <button onclick="sendCommand('resume')">Resume</button>
+  <h4>Get message from Elm</h4>
+  <p id="status">Beep!</p>
 </body>
 
 </html>

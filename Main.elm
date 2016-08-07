@@ -63,14 +63,17 @@ update msg model =
             ( model, Cmd.none )
 
         Pause ->
-            ( Paused, Cmd.none )
+            ( Paused, status "pause" )
 
         Resume ->
-            ( Resumed, Cmd.none )
+            ( Resumed, status "resume" )
 
 
 
 -- SUBSCRIPTIONS
+
+
+port status : String -> Cmd msg
 
 
 port command : (String -> msg) -> Sub msg
